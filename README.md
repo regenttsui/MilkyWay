@@ -75,30 +75,6 @@ npm run generate-icons
 - ✅ 隐私安全，不上传服务器
 - ✅ 支持导出备份和导入恢复
 
-## 🌐 部署
-
-### Cloudflare Pages（推荐）
-
-1. 将代码推送到 GitHub/GitLab 仓库
-2. 在 Cloudflare Pages 中创建新项目
-3. 连接到您的代码仓库
-4. 配置：
-   - **构建命令**: `npm run build`
-   - **输出目录**: `dist`
-5. 点击部署！
-
-### 其他选项
-
-- GitHub Pages
-- Vercel
-- Netlify
-
-## 📝 开发记录
-
-- 使用 `RecordContext` 管理应用数据
-- 使用 `ThemeContext` 管理主题状态
-- 支持移动端触摸友好设计
-- 活泼可爱的配色方案
 
 ## 📄 License
 
