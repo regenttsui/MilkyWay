@@ -14,9 +14,9 @@ const RecordCard = ({ record }: { record: Record }) => {
     const feedingType = FEEDING_TYPES.find(t => t.value === feedingData.type);
     content = (
       <div>
-        <div className="font-medium text-pink-600">🍼 {feedingType?.label || '喝奶'}</div>
+        <div className="font-medium text-pink-500 dark:text-pink-400">🍼 {feedingType?.label || '喝奶'}</div>
         {feedingData.amount && (
-          <div className="text-sm text-gray-600">{feedingData.amount} 毫升</div>
+          <div className="text-sm text-gray-600 dark:text-gray-400">{feedingData.amount} 毫升</div>
         )}
       </div>
     );
@@ -24,17 +24,17 @@ const RecordCard = ({ record }: { record: Record }) => {
     const poopData = record.data as any;
     content = (
       <div>
-        <div className="font-medium text-yellow-600">💩 大便</div>
-        <div className="text-sm text-gray-600">{poopData.shape} · {poopData.color}</div>
+        <div className="font-medium text-yellow-600 dark:text-yellow-400">💩 大便</div>
+        <div className="text-sm text-gray-600 dark:text-gray-400">{poopData.shape} · {poopData.color}</div>
       </div>
     );
   }
 
   return (
-    <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 mb-3">
+    <div className="bg-white dark:bg-slate-800 rounded-xl p-4 shadow-sm border border-gray-100 dark:border-slate-700 mb-3 transition-colors duration-300">
       <div className="flex justify-between items-start">
         {content}
-        <div className="text-xs text-gray-400">{time}</div>
+        <div className="text-xs text-gray-400 dark:text-gray-500">{time}</div>
       </div>
     </div>
   );
@@ -44,24 +44,24 @@ export default function Home() {
   const { records } = useRecords();
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-yellow-50 to-orange-50 pb-24">
+    <div className="min-h-screen bg-gradient-to-b from-yellow-50 to-orange-50 dark:from-slate-900 dark:to-slate-800 pb-24 transition-colors duration-300">
       <div className="max-w-md mx-auto px-4 py-6">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-yellow-800 mb-2">MilkyWay</h1>
-          <p className="text-yellow-600">记录宝宝的每一刻成长</p>
+          <h1 className="text-3xl font-bold text-yellow-800 dark:text-yellow-200 mb-2">MilkyWay</h1>
+          <p className="text-yellow-600 dark:text-yellow-400">记录宝宝的每一刻成长</p>
         </div>
 
         <div className="mb-6">
-          <div className="flex gap-3">
+          <div className="flex gap-2">
             <Link
               to="/add-feeding"
-              className="flex-1 bg-gradient-to-r from-pink-400 to-pink-500 text-white py-4 rounded-xl text-center font-medium shadow-md active:scale-95 transition-transform"
+              className="flex-1 bg-gradient-to-r from-pink-400 to-pink-500 dark:from-pink-500 dark:to-pink-600 text-white py-4 rounded-xl text-center font-medium shadow-md active:scale-95 transition-all duration-200"
             >
               🍼 记录喝奶
             </Link>
             <Link
               to="/add-poop"
-              className="flex-1 bg-gradient-to-r from-yellow-400 to-yellow-500 text-white py-4 rounded-xl text-center font-medium shadow-md active:scale-95 transition-transform"
+              className="flex-1 bg-gradient-to-r from-yellow-400 to-yellow-500 dark:from-yellow-500 dark:to-yellow-600 text-white py-4 rounded-xl text-center font-medium shadow-md active:scale-95 transition-all duration-200"
             >
               💩 记录大便
             </Link>
@@ -69,9 +69,9 @@ export default function Home() {
         </div>
 
         <div>
-          <h2 className="text-lg font-semibold text-gray-700 mb-4">最近记录</h2>
+          <h2 className="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-4">最近记录</h2>
           {records.length === 0 ? (
-            <div className="text-center py-12 text-gray-400">
+            <div className="text-center py-12 text-gray-500 dark:text-gray-400">
               <div className="text-5xl mb-4">👶</div>
               <p>还没有记录，开始添加第一条吧！</p>
             </div>

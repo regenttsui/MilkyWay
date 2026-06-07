@@ -13,6 +13,7 @@ import {
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import { useRecords } from '../context/RecordContext';
+import { useTheme } from '../context/ThemeContext';
 
 ChartJS.register(
   CategoryScale,
@@ -29,6 +30,7 @@ type TimeRange = 'day' | 'week' | 'month';
 
 export default function Stats() {
   const { records } = useRecords();
+  const { isDarkMode } = useTheme();
   const [range, setRange] = useState<TimeRange>('week');
 
   const stats = useMemo(() => {
@@ -138,20 +140,50 @@ export default function Stats() {
     ],
   };
 
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: true,
+    plugins: {
+      legend: {
+        labels: {
+          color: isDarkMode ? '#e2e8f0' : '#374151',
+        },
+      },
+    },
+    scales: {
+      x: {
+        ticks: {
+          color: isDarkMode ? '#94a3b8' : '#6b7280',
+        },
+        grid: {
+          color: isDarkMode ? '#334155' : '#e5e7eb',
+        },
+      },
+      y: {
+        ticks: {
+          color: isDarkMode ? '#94a3b8' : '#6b7280',
+        },
+        grid: {
+          color: isDarkMode ? '#334155' : '#e5e7eb',
+        },
+      },
+    },
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-indigo-50">
+    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-indigo-50 dark:from-slate-900 dark:to-slate-800 pb-24 transition-colors duration-300">
       <div className="max-w-md mx-auto px-4 py-6">
-        <h1 className="text-2xl font-bold text-gray-800 mb-6">数据统计</h1>
+        <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-6">数据统计</h1>
 
         <div className="flex gap-2 mb-6">
           {(['day', 'week', 'month'] as TimeRange[]).map((r) => (
             <button
               key={r}
               onClick={() => setRange(r)}
-              className={`flex-1 py-2 rounded-lg font-medium transition-colors ${
+              className={`flex-1 py-2 rounded-lg font-medium transition-all duration-200 ${
                 range === r
-                  ? 'bg-blue-500 text-white'
-                  : 'bg-white text-gray-600 border border-gray-200'
+                  ? 'bg-blue-500 text-white shadow-md'
+                  : 'bg-white dark:bg-slate-800 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-slate-700'
               }`}
             >
               {r === 'day' ? '今天' : r === 'week' ? '本周' : '本月'}
@@ -160,23 +192,23 @@ export default function Stats() {
         </div>
 
         <div className="grid grid-cols-3 gap-3 mb-6">
-          <div className="bg-white rounded-xl p-4 text-center shadow-sm">
+          <div className="bg-white dark:bg-slate-800 rounded-xl p-4 text-center shadow-sm transition-colors duration-300">
             <div className="text-2xl font-bold text-pink-500">{stats.feedingCount}</div>
-            <div className="text-sm text-gray-500">喝奶次数</div>
+            <div className="text-sm text-gray-500 dark:text-gray-400">喝奶次数</div>
           </div>
-          <div className="bg-white rounded-xl p-4 text-center shadow-sm">
+          <div className="bg-white dark:bg-slate-800 rounded-xl p-4 text-center shadow-sm transition-colors duration-300">
             <div className="text-2xl font-bold text-yellow-500">{stats.poopCount}</div>
-            <div className="text-sm text-gray-500">大便次数</div>
+            <div className="text-sm text-gray-500 dark:text-gray-400">大便次数</div>
           </div>
-          <div className="bg-white rounded-xl p-4 text-center shadow-sm">
+          <div className="bg-white dark:bg-slate-800 rounded-xl p-4 text-center shadow-sm transition-colors duration-300">
             <div className="text-2xl font-bold text-blue-500">{stats.totalFeedingAmount}</div>
-            <div className="text-sm text-gray-500">总喝奶量(ml)</div>
+            <div className="text-sm text-gray-500 dark:text-gray-400">总喝奶量(ml)</div>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl p-4 shadow-sm">
-          <h3 className="font-medium text-gray-700 mb-4">趋势图</h3>
-          <Line data={lineChartData} options={{ responsive: true, maintainAspectRatio: true }} />
+        <div className="bg-white dark:bg-slate-800 rounded-xl p-4 shadow-sm transition-colors duration-300">
+          <h3 className="font-medium text-gray-700 dark:text-gray-200 mb-4">趋势图</h3>
+          <Line data={lineChartData} options={chartOptions} />
         </div>
       </div>
     </div>
