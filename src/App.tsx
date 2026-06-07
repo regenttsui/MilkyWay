@@ -16,7 +16,9 @@ function AppContent() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/add-feeding" element={<AddFeeding />} />
+        <Route path="/edit-feeding/:id" element={<AddFeeding />} />
         <Route path="/add-poop" element={<AddPoop />} />
+        <Route path="/edit-poop/:id" element={<AddPoop />} />
         <Route path="/stats" element={<Stats />} />
         <Route path="/settings" element={<Settings />} />
       </Routes>

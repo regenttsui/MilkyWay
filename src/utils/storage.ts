@@ -29,6 +29,13 @@ export function deleteRecord(id: string): Record[] {
   return newRecords;
 }
 
+export function updateRecord(id: string, updatedRecord: Omit<Record, 'id'>): Record[] {
+  const records = getRecords();
+  const newRecords = records.map(r => r.id === id ? { ...r, ...updatedRecord } : r);
+  saveRecords(newRecords);
+  return newRecords;
+}
+
 export function exportData(): string {
   const records = getRecords();
   return JSON.stringify(records, null, 2);

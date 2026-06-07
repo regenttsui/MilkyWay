@@ -1,25 +1,58 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import dayjs from 'dayjs';
 import { useRecords } from '../context/RecordContext';
 import { POOP_SHAPES, POOP_COLORS } from '../types';
 
 export default function AddPoop() {
   const navigate = useNavigate();
-  const { addRecord } = useRecords();
-  const [shape, setShape] = useState(POOP_SHAPES[0]);
-  const [color, setColor] = useState(POOP_COLORS[0]);
-  const [timestamp, setTimestamp] = useState(Date.now());
+  const { id } = useParams();
+  const { addRecord, updateRecord, records } = useRecords();
+  
+  const isEdit = !!id;
+  
+  // 初始化表单值
+  const existingRecord = isEdit ? records.find(r => r.id === id && r.type === 'poop') : null;
+  const [shape, setShape] = useState<string>(
+    isEdit && existingRecord ? (existingRecord.data as any).shape : POOP_SHAPES[0]
+  );
+  const [color, setColor] = useState<string>(
+    isEdit && existingRecord ? (existingRecord.data as any).color : POOP_COLORS[0]
+  );
+  const [timestamp, setTimestamp] = useState<number>(
+    isEdit && existingRecord ? existingRecord.timestamp : Date.now()
+  );
+
+  useEffect(() => {
+    if (isEdit && records.length > 0 && !existingRecord) {
+      navigate('/');
+    }
+  }, [isEdit, existingRecord, navigate, records.length]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const record = {
-      id: Date.now().toString(),
+    
+    const recordData = {
       type: 'poop' as const,
       timestamp,
-      data: { shape, color },
+      data: {
+        shape,
+        color,
+      },
     };
-    addRecord(record);
+
+    if (isEdit && existingRecord) {
+      updateRecord({
+        ...existingRecord,
+        ...recordData,
+      });
+    } else {
+      addRecord({
+        id: Date.now().toString(),
+        ...recordData,
+      });
+    }
+    
     navigate('/');
   };
 
@@ -33,7 +66,9 @@ export default function AddPoop() {
           >
             ←
           </button>
-          <h1 className="text-2xl font-bold text-yellow-800 dark:text-yellow-200">记录大便</h1>
+          <h1 className="text-2xl font-bold text-yellow-800 dark:text-yellow-200">
+            {isEdit ? '编辑大便记录' : '记录大便'}
+          </h1>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -103,7 +138,7 @@ export default function AddPoop() {
             type="submit"
             className="w-full bg-gradient-to-r from-yellow-400 to-yellow-500 dark:from-yellow-500 dark:to-yellow-600 text-white py-4 rounded-xl font-medium text-lg shadow-md active:scale-95 transition-all duration-200"
           >
-            保存记录
+            {isEdit ? '保存修改' : '保存记录'}
           </button>
         </form>
       </div>

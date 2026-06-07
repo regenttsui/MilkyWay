@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import dayjs from 'dayjs';
 import { useRecords } from '../context/RecordContext';
 import type { FeedingType } from '../types';
@@ -7,15 +7,33 @@ import { FEEDING_TYPES } from '../types';
 
 export default function AddFeeding() {
   const navigate = useNavigate();
-  const { addRecord } = useRecords();
-  const [type, setType] = useState<FeedingType>('formula');
-  const [amount, setAmount] = useState('');
-  const [timestamp, setTimestamp] = useState(Date.now());
+  const { id } = useParams();
+  const { addRecord, updateRecord, records } = useRecords();
+  
+  const isEdit = !!id;
+  
+  // 初始化表单值
+  const existingRecord = isEdit ? records.find(r => r.id === id && r.type === 'feeding') : null;
+  const [type, setType] = useState<FeedingType>(
+    isEdit && existingRecord ? (existingRecord.data as any).type : 'formula'
+  );
+  const [amount, setAmount] = useState<string>(
+    isEdit && existingRecord ? ((existingRecord.data as any).amount?.toString() || '') : ''
+  );
+  const [timestamp, setTimestamp] = useState<number>(
+    isEdit && existingRecord ? existingRecord.timestamp : Date.now()
+  );
+
+  useEffect(() => {
+    if (isEdit && records.length > 0 && !existingRecord) {
+      navigate('/');
+    }
+  }, [isEdit, existingRecord, navigate, records.length]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const record = {
-      id: Date.now().toString(),
+    
+    const recordData = {
       type: 'feeding' as const,
       timestamp,
       data: {
@@ -23,7 +41,19 @@ export default function AddFeeding() {
         amount: amount ? parseInt(amount) : undefined,
       },
     };
-    addRecord(record);
+
+    if (isEdit && existingRecord) {
+      updateRecord({
+        ...existingRecord,
+        ...recordData,
+      });
+    } else {
+      addRecord({
+        id: Date.now().toString(),
+        ...recordData,
+      });
+    }
+    
     navigate('/');
   };
 
@@ -37,7 +67,9 @@ export default function AddFeeding() {
           >
             ←
           </button>
-          <h1 className="text-2xl font-bold text-pink-800 dark:text-pink-200">记录喝奶</h1>
+          <h1 className="text-2xl font-bold text-pink-800 dark:text-pink-200">
+            {isEdit ? '编辑喝奶记录' : '记录喝奶'}
+          </h1>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -92,7 +124,7 @@ export default function AddFeeding() {
             type="submit"
             className="w-full bg-gradient-to-r from-pink-400 to-pink-500 dark:from-pink-500 dark:to-pink-600 text-white py-4 rounded-xl font-medium text-lg shadow-md active:scale-95 transition-all duration-200"
           >
-            保存记录
+            {isEdit ? '保存修改' : '保存记录'}
           </button>
         </form>
       </div>
