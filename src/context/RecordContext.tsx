@@ -38,8 +38,13 @@ function recordReducer(state: RecordState, action: RecordAction): RecordState {
   switch (action.type) {
     case 'LOAD_RECORDS':
       return { ...state, records: action.payload };
-    case 'ADD_RECORD':
+    case 'ADD_RECORD': {
+      const exists = state.records.some(r => r.id === action.payload.id);
+      if (exists) {
+        return state;
+      }
       return { ...state, records: [action.payload, ...state.records] };
+    }
     case 'DELETE_RECORD':
       return { ...state, records: state.records.filter(r => r.id !== action.payload) };
     case 'UPDATE_RECORD':
