@@ -1,7 +1,7 @@
 import { createContext, useContext, useReducer, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import type { Record } from '../types';
-import { getRecords, addRecord, deleteRecord as deleteRecordFromStorage, updateRecord as updateRecordFromStorage } from '../utils/storage';
+import { getRecords, addRecord, deleteRecord as deleteRecordFromStorage, updateRecord as updateRecordFromStorage, cleanDuplicateRecords } from '../utils/storage';
 
 interface RecordState {
   records: Record[];
@@ -71,6 +71,12 @@ export function RecordProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(recordReducer, initialState);
 
   useEffect(() => {
+    // 应用启动时清理重复记录
+    const result = cleanDuplicateRecords();
+    if (result.cleaned > 0) {
+      console.log(`已清理 ${result.cleaned} 条重复记录，剩余 ${result.remaining} 条记录`);
+    }
+    
     loadRecords();
   }, []);
 

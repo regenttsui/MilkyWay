@@ -53,3 +53,22 @@ export function importData(data: string): boolean {
     return false;
   }
 }
+
+// 检查并清理重复记录（基于id）
+export function cleanDuplicateRecords(): { cleaned: number; remaining: number } {
+  const records = getRecords();
+  const uniqueRecords = records.filter((record, index, self) => 
+    index === self.findIndex(r => r.id === record.id)
+  );
+  
+  const cleanedCount = records.length - uniqueRecords.length;
+  
+  if (cleanedCount > 0) {
+    saveRecords(uniqueRecords);
+  }
+  
+  return {
+    cleaned: cleanedCount,
+    remaining: uniqueRecords.length
+  };
+}

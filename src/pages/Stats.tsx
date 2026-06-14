@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import dayjs from 'dayjs';
+import 'dayjs/locale/zh-cn';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -14,6 +15,9 @@ import {
 import { Line } from 'react-chartjs-2';
 import { useRecords } from '../context/RecordContext';
 import { useTheme } from '../context/ThemeContext';
+
+// 设置中文locale
+dayjs.locale('zh-cn');
 
 ChartJS.register(
   CategoryScale,
