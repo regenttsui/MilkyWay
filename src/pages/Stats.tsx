@@ -15,6 +15,7 @@ import {
 import { Line } from 'react-chartjs-2';
 import { useRecords } from '../context/RecordContext';
 import { useTheme } from '../context/ThemeContext';
+import type { FeedingData, Record } from '../types';
 
 // 设置中文locale
 dayjs.locale('zh-cn');
@@ -78,6 +79,12 @@ export default function Stats() {
     let feedingData: number[] = [];
     let poopData: number[] = [];
 
+    const calculateFeedingAmount = (records: Record[]) => {
+      return records
+        .filter(r => r.type === 'feeding')
+        .reduce((sum, r) => sum + ((r.data as FeedingData).amount || 0), 0);
+    };
+
     if (range === 'day') {
       for (let i = 0; i < 24; i++) {
         labels.push(`${i}:00`);
@@ -86,7 +93,7 @@ export default function Stats() {
         const hourRecords = stats.filteredRecords.filter(
           r => r.timestamp >= hourStart && r.timestamp <= hourEnd
         );
-        feedingData.push(hourRecords.filter(r => r.type === 'feeding').length);
+        feedingData.push(calculateFeedingAmount(hourRecords));
         poopData.push(hourRecords.filter(r => r.type === 'poop').length);
       }
     } else if (range === 'week') {
@@ -99,7 +106,7 @@ export default function Stats() {
         const dayRecords = stats.filteredRecords.filter(
           r => r.timestamp >= dayStart && r.timestamp <= dayEnd
         );
-        feedingData.push(dayRecords.filter(r => r.type === 'feeding').length);
+        feedingData.push(calculateFeedingAmount(dayRecords));
         poopData.push(dayRecords.filter(r => r.type === 'poop').length);
       }
     } else {
@@ -112,7 +119,7 @@ export default function Stats() {
         const dayRecords = stats.filteredRecords.filter(
           r => r.timestamp >= dayStart && r.timestamp <= dayEnd
         );
-        feedingData.push(dayRecords.filter(r => r.type === 'feeding').length);
+        feedingData.push(calculateFeedingAmount(dayRecords));
         poopData.push(dayRecords.filter(r => r.type === 'poop').length);
       }
     }
@@ -128,7 +135,7 @@ export default function Stats() {
     labels: chartData.labels,
     datasets: [
       {
-        label: '喝奶次数',
+        label: '喝奶量(ml)',
         data: chartData.feedingData,
         borderColor: '#f472b6',
         backgroundColor: 'rgba(244, 114, 182, 0.1)',
