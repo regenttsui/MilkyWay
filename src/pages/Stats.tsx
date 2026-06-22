@@ -197,16 +197,16 @@ export default function Stats() {
 
         <div className="grid grid-cols-3 gap-3 mb-6">
           <div className="bg-white dark:bg-slate-800 rounded-xl p-4 text-center shadow-sm transition-colors duration-300">
-            <div className="text-2xl font-bold text-pink-500">{stats.feedingCount}</div>
-            <div className="text-sm text-gray-500 dark:text-gray-400">喝奶次数</div>
+            <div className="text-2xl font-bold text-pink-500">{stats.totalFeedingAmount}</div>
+            <div className="text-sm text-gray-500 dark:text-gray-400">喝奶量(ml)</div>
           </div>
           <div className="bg-white dark:bg-slate-800 rounded-xl p-4 text-center shadow-sm transition-colors duration-300">
             <div className="text-2xl font-bold text-yellow-500">{stats.poopCount}</div>
             <div className="text-sm text-gray-500 dark:text-gray-400">大便次数</div>
           </div>
           <div className="bg-white dark:bg-slate-800 rounded-xl p-4 text-center shadow-sm transition-colors duration-300">
-            <div className="text-2xl font-bold text-blue-500">{stats.totalFeedingAmount}</div>
-            <div className="text-sm text-gray-500 dark:text-gray-400">总喝奶量(ml)</div>
+            <div className="text-2xl font-bold text-blue-500">{stats.feedingCount}</div>
+            <div className="text-sm text-gray-500 dark:text-gray-400">喝奶次数</div>
           </div>
         </div>
 
